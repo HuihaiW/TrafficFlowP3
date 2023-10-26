@@ -73,8 +73,8 @@ class NetAll(nn.Module):
         x = self.conv3(x, edge_index)
         x = self.act2(x)
 
-        h0 = torch.zeros(self,num_layers, x_all.shape[0], 64).requires_grad_().to(device)
-        c0 = torch.zeros(self,num_layers, x_all.shape[0], 64).requires_grad_().to(device)
+        h0 = torch.zeros(self.num_layers, x_all.shape[0], 64).requires_grad_().to(device)
+        c0 = torch.zeros(self.num_layers, x_all.shape[0], 64).requires_grad_().to(device)
 
         _, (hn, _) = self.lstm(t, (h0, c0))
 
@@ -90,112 +90,3 @@ class NetAll(nn.Module):
         x = self.linear3(x)
 
         return x
-
-
-
-# class Net1(torch.nn.Module):
-#     def __init__(self):
-#         super(Net1, self).__init__()
-        
-#         self.num_layers = 1
-        
-#         self.sep1 = nn.Linear(2, 64)
-#         self.sep2 = nn.Linear(13, 64)
-#         self.sep3 = nn.Linear(40, 128)
-#         self.sep3_2 = nn.Linear(365, 128)
-        
-#         self.sep4 = nn.Linear(64, 64)
-#         self.sep5 = nn.Linear(64, 64)
-#         self.sep6 = nn.Linear(128, 128)
-#         self.sep7 = nn.Linear(128, 128)
-        
-# #         
-
-#         self.conv1 = GATConv(384-128, 128)
-# #         self.norm1 = torch.nn.BatchNorm1d(128)
-
-#         self.conv2 = GATConv(128, 128)
-# #         self.norm2 = torch.nn.BatchNorm1d(128)
-
-#         self.conv3 = GATConv(128, 64)
-# #         self.norm5 = torch.nn.BatchNorm1d(64)
-
-#         self.lstm1 = nn.LSTM(20, 64, num_layers=self.num_layers)
-# #         self.norm6 = torch.nn.BatchNorm1d(64)
-        
-        
-# #         Fully connected layer to get the result
-#         self.linear1 = nn.Linear(128, 64)
-#         self.norm7 = torch.nn.BatchNorm1d(64)
-        
-#         self.linear2 = nn.Linear(64, 64)
-#         self.norm8 = torch.nn.BatchNorm1d(8)
-        
-#         self.linear3 = nn.Linear(64, 56)
-        
-#     def forward(self, data):
-# #         print('#################################################################')
-        
-#         x_all, edge_index = data.x, data.edge_index
-        
-#         x_road = x_all[:, 1:3]
-#         x_location = x_all[:,3:16]
-#         x_se = x_all[:, 16:56]
-#         x_svi = x_all[:, 56:421]
-#         t = x_all[:, 421:].reshape((1, x_all.shape[0], 20))  
-
-#         x_road = self.sep1(x_road)
-#         x_road = F.sigmoid(x_road)
-#         x_road = self.sep4(x_road)
-#         x_road = F.relu(x_road)
-        
-#         x_location = self.sep2(x_location)
-#         x_location = F.sigmoid(x_location)
-#         x_location = self.sep5(x_location)
-#         x_location = F.relu(x_location)
-        
-#         x_se = self.sep3(x_se)
-#         x_se = F.sigmoid(x_se)
-#         x_se = self.sep6(x_se)
-#         x_se = F.relu(x_se)
-        
-#         # **************SVI********************************
-#         x_svi = self.sep3_2(x_svi)
-#         x_svi = F.relu(x_svi)
-#         x_svi = self.sep7(x_svi)
-#         x_svi = F.relu(x_svi)
-        
-#         x = torch.cat((x_road, x_location, x_se, x_svi), 1)
-#         # **************SVI********************************
-
-#         # **************nosvi******************************
-#         x = torch.cat((x_road, x_location, x_se), 1)
-    
-#         x = self.conv1(x, edge_index)
-#         x = F.relu(x) 
-
-#         x = self.conv2(x, edge_index)
-#         x = F.relu(x)
-
-#         x = self.conv3(x, edge_index)
-#         x = F.relu(x)
-# #         x = F.dropout(x, training=self.training, p=0.1) 
-
-#         h0 = torch.zeros(self.num_layers, x_all.shape[0], 64).requires_grad_().to(device)
-#         c0 = torch.zeros(self.num_layers, x_all.shape[0], 64).requires_grad_().to(device)
-
-#         _, (hn, _) = self.lstm1(t, (h0, c0))
-
-#         t = hn[0]
-#         x = torch.cat((x, t), 1)
-        
-#         x = self.linear1(x)
-#         x = F.relu(x)
-# #         x = F.dropout(x, p=0.1)
-        
-#         x = self.linear2(x)
-#         x = F.relu(x)
-        
-#         x = self.linear3(x)
-        
-#         return x
