@@ -1,6 +1,6 @@
 import torch
 import torch.nn.functional as F
-import torch.nn as nn 
+import torch.nn as nn
 from torch_geometric.nn import GCNConv
 from torch_geometric.nn import GATConv
 
